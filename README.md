@@ -1,19 +1,15 @@
-# PSEUDO | CAIXA ELETRÔNICO
+# PSEUDO | CAIXA ELETRÔNICO / CASH MACHINE
 
-# Informações (pt-BR)
+# Informações (PT)
 
 Pseudo caixa eletrônico 100% funcional, criado com intuito de aprendizado.
-
-# Tecnologia usada no projeto!
+Tecnologia usada no projeto!
 1. Python
-
-# PSEUDO | CASH MACHINE
 
 # Information (EN)
 
 100% functional pseudo ATM, created with the purpose of learning.
-
-# Technology used in the project!
+Technology used in the project!
 1. Python
 
 # Meus contatos - My contacts
