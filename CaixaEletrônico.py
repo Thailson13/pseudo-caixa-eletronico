@@ -1,21 +1,17 @@
 import time
 
-
 class Cliente:
     def __init__(self, nome, cartao, senha, saldo):
         self.nome = nome
         self.cartao = cartao
         self.senha = senha
         self.saldo = saldo
-
+        self.extrato = []
 
 clientes = [
-    Cliente("Thailson", "2501", "1820", 1000.0),
-    Cliente("Matheus", "0507", "3340", 22000.0),
-    Cliente("Lyranjor", "1309", "3510", 2500.0),
-    Cliente("Valmir", "2409", "9999", 10000.0),
+    Cliente("Thailson Júlio", "5233 6145 0898 0931", "2501", 1000.0),
+    # número do cartão é fictisio - Gerado no https://www.4devs.com.br/gerador_de_numero_cartao_credito
 ]
-
 
 def menu():
     print("Bem-vindo ao Caixa Eletrônico")
@@ -26,7 +22,7 @@ def menu():
         if senha == cliente.senha:
             print("Login realizado com sucesso")
             while True:
-                print(cliente.nome + ",", "escolha uma opção:")
+                print(f"{cliente.nome}, escolha uma opção:")
                 print("1 - Saldo")
                 print("2 - Saque")
                 print("3 - Extrato")
@@ -34,19 +30,15 @@ def menu():
                 print("5 - Sair")
                 opcao = input("Opção escolhida: ")
                 if opcao == "1":
-                    saldo(cliente)
+                    exibir_saldo(cliente)
                 elif opcao == "2":
-                    saque(cliente)
+                    realizar_saque(cliente)
                 elif opcao == "3":
-                    extrato(cliente)
+                    exibir_extrato(cliente)
                 elif opcao == "4":
-                    emprestimo(cliente)
+                    realizar_emprestimo(cliente)
                 elif opcao == "5":
-                    print(
-                        "Obrigado",
-                        cliente.nome + ",",
-                        "por utilizar nosso caixa eletrônico!",
-                    )
+                    print(f"Obrigado, {cliente.nome}, por utilizar nosso caixa eletrônico!")
                     break
                 else:
                     print("Opção inválida")
@@ -55,13 +47,11 @@ def menu():
     else:
         print("Cartão não identificado")
 
-
 def identificar_cliente(cartao):
     for cliente in clientes:
         if cliente.cartao == cartao:
             return cliente
     return None
-
 
 def is_numero(valor):
     try:
@@ -70,43 +60,50 @@ def is_numero(valor):
     except ValueError:
         return False
 
+def exibir_saldo(cliente):
+    print(f"Seu saldo é: R${cliente.saldo:.2f}")
 
-def saldo(cliente):
-    print(f"seu saldo é: R${cliente.saldo:.2f}")
-
-
-def saque(cliente):
+def realizar_saque(cliente):
     valor = input("Digite o valor do saque: ")
-    if is_numero(valor) and float(valor) <= cliente.saldo:
-        cliente.saldo -= float(valor)
-        print("Saque realizado com sucesso")
-        print(f"Novo saldo: R${cliente.saldo:.2f}")
+    if is_numero(valor):
+        valor = float(valor)
+        if valor <= cliente.saldo:
+            cliente.saldo -= valor
+            cliente.extrato.append(f"Saque: -R${valor:.2f}")
+            print("Saque realizado com sucesso")
+            print(f"Novo saldo: R${cliente.saldo:.2f}")
+        else:
+            print("Saldo insuficiente")
     else:
-        print("Valor inválido ou saldo insuficiente")
+        print("Valor inválido")
 
-
-def extrato(cliente):
+def exibir_extrato(cliente):
     print("Extrato bancário:")
     print(f"Nome: {cliente.nome}")
     print(f"Número do cartão: {cliente.cartao}")
     print(f"Saldo atual: R${cliente.saldo:.2f}")
     print(f"Data: {time.strftime('%d/%m/%Y')}")
+    print("Transações:")
+    for transacao in cliente.extrato:
+        print(transacao)
+    print()
 
-
-def emprestimo(cliente):
+def realizar_emprestimo(cliente):
     valor = input("Digite o valor do empréstimo: ")
-    if is_numero(valor) and float(valor) > 0:
-        print("Empréstimo realizado com sucesso")
-        newSaldo = cliente.saldo
-        newSaldo = float(newSaldo) + float(valor)
-        cliente.saldo = float(newSaldo)
-        print(f"Novo saldo: R${newSaldo:.2f}")
-        juros = 0.05
-        juros = float(valor) * float(juros)
-        print(f"Juros de 5% aplicado, valor do juros: R${juros:.2f}")
-
+    if is_numero(valor):
+        valor = float(valor)
+        if valor > 0:
+            juros = valor * 0.05
+            novo_saldo = cliente.saldo + valor
+            cliente.saldo = novo_saldo
+            cliente.extrato.append(f"Empréstimo: +R${valor:.2f}")
+            cliente.extrato.append(f"Juros: +R${juros:.2f}")
+            print("Empréstimo realizado com sucesso")
+            print(f"Novo saldo: R${novo_saldo:.2f}")
+            print(f"Valor do juros: R${juros:.2f}")
+        else:
+            print("Valor inválido")
     else:
         print("Valor inválido")
-
 
 menu()
